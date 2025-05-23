@@ -63,7 +63,7 @@ public enum StompAckMode {
 @objc
 public protocol StompClientLibDelegate: class {
     func stompClient(client: StompClientLib!, didReceiveMessageWithJSONBody jsonBody: AnyObject?, akaStringBody stringBody: String?, withHeader header:[String:String]?, withDestination destination: String)
-    func stompClientDisconnectCode(code: Int, reason: String)
+    func stompClientDisconnectCode(client: StompClientLib!, code: Int, reason: String)
     func stompClientDidDisconnect(client: StompClientLib!)
     func stompClientDidConnect(client: StompClientLib!)
     func serverDidSendReceipt(client: StompClientLib!, withReceiptId receiptId: String)
@@ -215,7 +215,7 @@ public class StompClientLib: NSObject, SRWebSocketDelegate {
         print("didCloseWithCode \(code), reason: \(String(describing: reason))")
         if let delegate = delegate {
             DispatchQueue.main.async(execute: {
-                delegate.stompClientDisconnectCode(code:code,reason:reason)
+                delegate.stompClientDisconnectCode(client: self,code:code,reason:reason)
                 delegate.stompClientDidDisconnect(client: self)
             })
         }
